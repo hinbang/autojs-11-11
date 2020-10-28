@@ -17,7 +17,7 @@ speed = 1;
 float = 1.25;
 patNum = 0;
 swipeTips = "滑啊滑啊滑啊滑";
-taskChooseList = ["淘宝赚喵币", "淘宝拍猫猫", "支付宝赚喵币", "京东全民营业",'苏宁领人气|10分钟',"苏宁逛一逛任务"];
+taskChooseList = ["淘宝赚喵币", "淘宝拍猫猫", "支付宝赚喵币", "京东全民营业",'苏宁领人气|10分钟',"苏宁逛一逛任务[Fix me]"];
 speedChooseList = [0.75, 1, 1.25, 1.5, 1.75, 2, 3]
 taobaoActivityData = "taobao://pages.tmall.com/wow/z/hdwk/act-20201111/index";
 activityActivityData = "alipays://platformapi/startapp?appId=68687502";
@@ -138,7 +138,7 @@ function runOptions(options) {
                 break;
             case 5:
                 //执行苏宁任务
-                var taskList = ['签到', '去逛逛','去完成'];
+                var taskList = ['签到', '去逛逛'];
                 log("=====开始执行" + taskChooseList[option] + "=====");
                 runSN(taskList);
                 break;
@@ -376,7 +376,7 @@ function runJd(taskList) {
 function cycRunSN(taskList) {
     var i = j = 0;
     var activityButton = "赚人气 得红包";
-    //app.launchApp("苏宁易购");
+    app.launchApp("苏宁易购");
     randomSleep(2000 * speed);
     if (!descContains(activityButton).exists()) {
         alert("温馨提示", "首页没有找到【苏宁】活动入口浮层\n请手动打开活动页，进入后脚本会自动执行");
@@ -405,7 +405,7 @@ function cycRunSN(taskList) {
 function runSN(taskList) {
     var i = j = 0;
     var activityButton = "赚人气 得红包";
-    //app.launchApp("苏宁易购");
+    app.launchApp("苏宁易购");
     randomSleep(2000 * speed);
     if (!descContains(activityButton).exists()) {
         alert("温馨提示", "首页没有找到【苏宁】活动入口浮层\n请手动打开活动页，进入后脚本会自动执行");
@@ -454,7 +454,7 @@ function runSN(taskList) {
     w.click();  
     log(w); */
     //clickContent("crown");
-
+    text("去逛逛").waitFor();
     randomSleep(1000 * speed);
     //未打开任务列表则再次尝试点击
     while (!textContains("去逛逛").exists() && !textContains("已完成").exists()) {
