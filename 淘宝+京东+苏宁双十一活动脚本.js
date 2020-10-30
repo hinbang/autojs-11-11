@@ -17,10 +17,11 @@ speed = 1;
 float = 1.25;
 patNum = 0;
 swipeTips = "滑啊滑啊滑啊滑";
-taskChooseList = ["淘宝赚喵币", "淘宝拍猫猫", "支付宝赚喵币", "京东全民营业",'苏宁领人气|10分钟',"苏宁逛一逛任务[Fix me]"];
+taskChooseList = ["淘宝赚喵币", "淘宝拍猫猫", "支付宝赚喵币", "京东全民营业",'苏宁领人气|5mins间隔',"苏宁逛一逛任务"];
 speedChooseList = [0.75, 1, 1.25, 1.5, 1.75, 2, 3]
 taobaoActivityData = "taobao://pages.tmall.com/wow/z/hdwk/act-20201111/index";
 activityActivityData = "alipays://platformapi/startapp?appId=68687502";
+suningAcrivityData = "suning//c.m.suning.com/jx201111.html"
 
 height = device.height;
 width = device.width;
@@ -138,7 +139,7 @@ function runOptions(options) {
                 break;
             case 5:
                 //执行苏宁任务
-                var taskList = ['签到', '去逛逛'];
+                var taskList = ['立即签到', '去逛逛'];
                 log("=====开始执行" + taskChooseList[option] + "=====");
                 runSN(taskList);
                 break;
@@ -373,25 +374,12 @@ function runJd(taskList) {
     log("=========================");
 }
 
-function cycRunSN(taskList) {
+function cycRunSN(taskList){
     var i = j = 0;
-    var activityButton = "赚人气 得红包";
-    app.launchApp("苏宁易购");
+    launch("com.suning.mobile.ebuy");
     randomSleep(2000 * speed);
-    if (!descContains(activityButton).exists()) {
-        alert("温馨提示", "首页没有找到【苏宁】活动入口浮层\n请手动打开活动页，进入后脚本会自动执行");
-    } else {
-        clickContent(activityButton, "desc");
-        log("正在打开【苏宁】活动页");
-        randomSleep(300 * speed);
-        //部分账号首页的活动浮层默认是收起状态，再次点击(有时候会点击失败，所以用while)
-        while (descContains(activityButton).exists()) {
-            clickContent(activityButton, "desc");
-            randomSleep(300 * speed);
-        }
-        toastLog("若页面有弹窗，请手动关闭");
-        randomSleep(5000 * speed);
-    };
+    alert("温馨提示", "请手动点击悬浮入口，打开活动页，进入后脚本会自动执行");
+    
     text("领人气").waitFor();
     clickContent("领人气");
     while (1) {
@@ -405,26 +393,12 @@ function cycRunSN(taskList) {
 function runSN(taskList) {
     var i = j = 0;
     var activityButton = "赚人气 得红包";
-    app.launchApp("苏宁易购");
-    randomSleep(2000 * speed);
-    if (!descContains(activityButton).exists()) {
-        alert("温馨提示", "首页没有找到【苏宁】活动入口浮层\n请手动打开活动页，进入后脚本会自动执行");
-    } else {
-        clickContent(activityButton, "desc");
-        log("正在打开【苏宁】活动页");
-        randomSleep(300 * speed);
-        //部分账号首页的活动浮层默认是收起状态，再次点击(有时候会点击失败，所以用while)
-        while (descContains(activityButton).exists()) {
-            clickContent(activityButton, "desc");
-            randomSleep(300 * speed);
-        }
-        toastLog("若页面有弹窗，请手动关闭");
-        randomSleep(5000 * speed);
-    }
-    //text("领人气").waitFor();
-    //clickContent("领人气");
+    launch("com.suning.mobile.ebuy");
+    randomSleep(3000 * speed);
+    alert("温馨提示", "请手动点击悬浮入口，打开活动页，进入后脚本会自动执行");
+
     randomSleep(5000 * speed);
-    /*     var arr=[];
+    /*var arr=[];
     function queryList(json,arr) {
         for (var i = 0; i < json.childCount(); i++) {
             var sonList = json.child(i);
@@ -452,10 +426,22 @@ function runSN(taskList) {
     var y = 600;
     var w = boundsContains(x, y, device.width - x, device.height - y).findOne();
     w.click();  
-    log(w); */
-    //clickContent("crown");
+    log(w);
+*/
+    //逛店铺任务
+    text("领人气").waitFor();
+    clickContent("领人气");
+    randomSleep(1000 * speed);
+
+    click(width/2,height/3*2);
+    randomSleep(2000 * speed);
+    if (!textContains("去逛逛").exists()){
+        alert("温馨提示", "没有找到任务列表，请手动打开，进入后脚本会自动执行");
+    }
+    //逛会场任务
     text("去逛逛").waitFor();
     randomSleep(1000 * speed);
+
     //未打开任务列表则再次尝试点击
     while (!textContains("去逛逛").exists() && !textContains("已完成").exists()) {
         clickContent("赚人气");
@@ -467,36 +453,103 @@ function runSN(taskList) {
             if (button == null) {
                 break;
             }
-            log("开始做第" + (i + 1) + "次任务");
             switch (task) {
-                case '签到':
+                case '立即签到':
                     jdClickButton(button);
                     log("签到成功");
                     i++;
                     randomSleep(1000 * speed);
-                    break;
+                    break;  
                 case '去逛逛':
-                    jdClickButton(button);
-                    i++;
-                    randomSleep(3500 * speed);
-                    toast(swipeTips);
-                    randomSwipe();
-                    randomSleep(5000 * speed);
-                    toast(swipeTips);
-                    randomSwipe();
-                    randomSleep(5500 * speed);
-                    toast(swipeTips);
-                    randomSwipe();
-                    randomSleep(5500 * speed)
-                    if(textContains("返回自动领取")){
-                        log("逛一逛成功");
+                    if(textContains("逛会场(5/5)").exists() || textContains("逛店铺(30/30)").exists()) {
+                        toastLog("【苏宁】任务已完成");
+                        log("=========================");
+                        return ;
                     }
-                    back()
-                    randomSleep(2000 * speed)
-                    text("知道了").click()
-                    randomSleep(1000 * speed)
-                    break;
-            }
+                    if(!textContains("逛会场(5/5)").exists()){
+                        log("第" + (i + 1) + "次 逛会场");
+                        jdClickButton(button);
+                        i++;
+                        randomSleep(2500 * speed);
+                        toast(swipeTips);
+                        randomSwipe();
+                        randomSleep(5000 * speed);
+                        toast(swipeTips);
+                        randomSwipe();
+                        randomSleep(5500 * speed);
+                        toast(swipeTips);
+                        randomSwipe();
+                        randomSleep(5500 * speed)
+                        if(textContains("返回领取")){
+                            log("逛一逛成功");
+                        }
+                        back()
+                        randomSleep(3000 * speed)
+                        text("知道了").click()
+                        randomSleep(3000 * speed)
+                    } else{
+                        jdClickButton(button);
+                        randomSleep(2000 * speed);
+                        toast(swipeTips);
+                        randomSwipe();
+                        //while (textContains("+100").exists() && !textContains("30/30").exists())
+                       for (var l = 0;l < 30; l++){
+                           if(textContains("30/30").exists()) break;
+                           while (!textContains("+100").exists()){
+                                if (!textContains("以下APP于").exists()){
+                                    break;
+                                }
+                                randomSleep(1500 * speed);
+                                toast(swipeTips);
+                                randomSwipe();
+                            }
+                            log("第"+ (l + 1) +"次进来 逛商铺");
+                            var button100 = textContains("+100").findOnce(l);
+                            if (button100 != null) {
+                                button100.click();
+                            }
+                            randomSleep(2500 * speed);
+                            toast(swipeTips);
+                            randomSwipe();
+                            randomSleep(3000 * speed);
+                            toast(swipeTips);
+                            randomSleep(4000 * speed);
+                            toast(swipeTips);
+                            randomSwipe();
+                            randomSleep(4500 * speed);
+                            if(textContains("返回领取").exists() || textContains("今日任务完成").exists()){
+                                log("逛一逛成功");
+                                back();
+                                randomSleep(3000 * speed);
+                                if (textContains("知道了").exists()){
+                                    text("知道了").click();
+                                }
+                                randomSleep(3000 * speed);
+                            } else if(!textContains("10").exists()) {
+                                back();
+                                randomSleep(2500 * speed);
+                                toast(swipeTips);
+                                randomSwipe();
+                                randomSleep(3000 * speed);
+                                toast(swipeTips);
+                                randomSleep(4000 * speed);
+                                toast(swipeTips);
+                                randomSwipe();
+                                randomSleep(4500 * speed);
+                                if(textContains("返回领取")|| textContains("今日任务完成").exists()){
+                                    log("逛一逛成功");
+                                    back();
+                                }
+                                randomSleep(1000 * speed);
+                                if (textContains("知道了").exists()){
+                                    text("知道了").click();
+                                }
+                                randomSleep(2000 * speed);
+                            }
+                        }
+                        break;
+                    }
+                }
         }
     });
     toastLog("【苏宁】任务已完成");
