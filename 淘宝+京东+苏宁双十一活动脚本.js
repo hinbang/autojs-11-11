@@ -139,7 +139,7 @@ function runOptions(options) {
                 break;
             case 5:
                 //执行苏宁任务
-                var taskList = ['立即签到', '去逛逛'];
+                var taskList = ['去逛逛'];
                 log("=====开始执行" + taskChooseList[option] + "=====");
                 runSN(taskList);
                 break;
@@ -392,7 +392,6 @@ function cycRunSN(taskList){
 
 function runSN(taskList) {
     var i = j = 0;
-    var activityButton = "赚人气 得红包";
     launch("com.suning.mobile.ebuy");
     randomSleep(3000 * speed);
     alert("温馨提示", "请手动点击悬浮入口，打开活动页，进入后脚本会自动执行");
@@ -461,7 +460,8 @@ function runSN(taskList) {
                     randomSleep(1000 * speed);
                     break;  
                 case '去逛逛':
-                    if(textContains("逛会场(5/5)").exists() || textContains("逛店铺(30/30)").exists()) {
+                    if(textContains("逛会场(5/5)").exists() && textContains("逛店铺(30/30)").exists()) {
+                        log(textContains("逛会场(5/5)").exists() && textContains("逛店铺(30/30)").exists());
                         toastLog("【苏宁】任务已完成");
                         log("=========================");
                         return ;
